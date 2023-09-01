@@ -14,3 +14,15 @@
         -- exercise(s)
             -- reps
                 -- sets 
+
+
+[] - unify response
+    [] - error
+    [] - success
+
+[] - Auth routes:
+    [] - Register
+    [] - Auth
+
+[] - Middleware:
+    [] - verify
