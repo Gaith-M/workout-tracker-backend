@@ -1,59 +1,66 @@
 const router = require("express").Router();
-const User = require("../model/User");
 const Joi = require("joi");
+const User = require("../model/User");
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
-const registerSchema = Joi.object({
-  firstName: Joi.string().alphanum().required(),
-  lastName: Joi.string().alphanum().required(),
+const authSchema = Joi.object({
   email: Joi.string()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .required(),
-  password: Joi.string().pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).min(8).max(32).required().messages({
-    "string.pattern.base": "Password can contain letters and numbers only",
-  }),
-  DoB: Joi.date().options({ convert: false }).messages({
-    "date.base": "Date of birth must be a valid date",
-  }),
-  trainingSince: Joi.date().options({ convert: false }).messages({
-    "date.base": "Training since must be a valid date",
-  }),
-  sex: Joi.string(),
+  password: Joi.string().required(),
 });
 
-router.post("/register", async (req, res) => {
-  const { error } = registerSchema.validate(req.body);
+router.post("/register", require("../controller/register-controller"));
 
-  if (error) {
-    return res.status(400).json({ error: error.details[0].message });
-  }
+// for auth we need : email and password.
+router.post("/auth", async (req, res) => {
+  const { error } = authSchema.validate(req.body);
+
+  if (error) return res.status(400).json({ success: false, message: error.details[0].message, data: null });
 
   try {
-    // Check if the email is unique
-    const match = await User.findOne({ email: req.body.email }).exec();
+    const foundUser = await User.findOne({ email: req.body.email }).exec();
+    if (!foundUser) return res.status(400).json({ success: false, message: `Please, re-check the provided data.` });
 
-    if (match) {
-      return res.status(409).json({
-        success: false,
-        message: "Email address is taken",
-      });
-    }
+    // compare passwords
+    const validPassword = await bcrypt.compare(req.body.password, foundUser.password);
+    if (!validPassword) return res.status(400).json({ success: false, message: `Please, re-check the provided data.` });
 
-    const hashed = await bcrypt.hash(req.body.password, 10);
+    // create token and refresh token
+    const accessToken = jwt.sign(
+      {
+        firstName: foundUser.firstName,
+        lastName: foundUser.lastName,
+        id: foundUser._id,
+      },
+      process.env.AUTH_TOKEN_SECRET,
+      {
+        expiresIn: "300s",
+      }
+    );
 
-    const newUser = await User.create({
-      ...req.body,
-      password: hashed,
-    });
+    const refreshToken = jwt.sign(
+      {
+        firstName: foundUser.firstName,
+        lastName: foundUser.lastName,
+        id: foundUser._id,
+      },
+      process.env.REFRESH_TOKEN_SECRET,
+      {
+        expiresIn: "300s",
+      }
+    );
 
-    res.status(201).json({ success: true, message: "User created", data: newUser });
+    foundUser.accessToken = accessToken;
+    foundUser.refreshToken = refreshToken;
+
+    const result = await foundUser.save();
+
+    res.json({ data: result });
   } catch (err) {
     console.log(err);
   }
-});
-
-router.post("/auth", (req, res) => {
-  res.send("auth");
 });
 
 router.get("/logout", (req, res) => {
@@ -62,10 +69,9 @@ router.get("/logout", (req, res) => {
 
 module.exports = router;
 
-
 // {
 //   "firstName": "Gaith",
 //   "lastName": "M",
-//   "password": "1231asdas",
+//   "password": "123Gaith123",
 //   "email": "gaithteraacc@gmail.com"
 // }
