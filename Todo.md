@@ -13,4 +13,4 @@
 
 ## Middleware
 
-- Verify
+- Verify: check if there is a token sent in the request

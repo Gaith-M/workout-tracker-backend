@@ -20,7 +20,7 @@ const registerSchema = Joi.object({
   sex: Joi.string(),
 });
 
-const handleRegister = async (req, res) => {
+const registerHandler = async (req, res) => {
   const { error } = registerSchema.validate(req.body);
 
   if (error) {
@@ -51,4 +51,4 @@ const handleRegister = async (req, res) => {
   }
 };
 
-module.exports = handleRegister;
+module.exports = registerHandler;
