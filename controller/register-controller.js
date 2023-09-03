@@ -18,6 +18,8 @@ const registerSchema = Joi.object({
     "date.base": "Training since must be a valid date",
   }),
   sex: Joi.string(),
+  weight: Joi.number(),
+  height: Joi.number(),
 });
 
 const registerHandler = async (req, res) => {

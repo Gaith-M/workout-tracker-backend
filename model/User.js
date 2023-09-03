@@ -8,6 +8,8 @@ const userSchema = new Schema({
   email: {type: String, required: true},
   DoB: Number,
   sex: String,
+  weight: Number,
+  height: Number,
   trainingSince: Date,
   accessToken: String,
   refreshToken: String,

@@ -11,7 +11,7 @@ const registerHandler = require("../controller/register-controller");
 // Create new user
 router.post("/register", registerHandler);
 // Login / authentication
-router.post("/auth", authenticationHandler);
+router.post("/login", authenticationHandler);
 // Refresh access token
 router.post("/refresh", refreshHandler);
 // Logout
@@ -26,8 +26,9 @@ router.get("/data", authorize, (req, res) => {
 module.exports = router;
 
 // {
-//   "firstName": "Gaith",
-//   "lastName": "M",
-//   "password": "123Gaith123",
 //   "email": "gaithteraacc@gmail.com"
+// }
+
+// {
+//   "email": "BlazingLight@gmail.com"
 // }

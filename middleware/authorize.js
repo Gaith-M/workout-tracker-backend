@@ -10,7 +10,8 @@ const authorize = (req, res, next) => {
 
   jwt.verify(token, process.env.AUTH_TOKEN_SECRET, (err, user) => {
     if (err) return res.status(403).json("Forbidden");
-    console.log(user);
+    
+    req.user = user;
     next();
   });
 };
