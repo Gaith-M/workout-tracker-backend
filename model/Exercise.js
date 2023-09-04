@@ -6,7 +6,7 @@ const ExerciseSchema = new Schema({
   date: { type: Date, default: Date.now },
   progression: [
     {
-      date: { type: Date, default: Date.now, required: true },
+      date: { type: Date, default: Date.now },
       sets: [
         {
           reps: { type: Number, required: true },

@@ -54,3 +54,12 @@ Sessions is an array of entries.
 an entry is an object that contains date and sets.
 sets is an array that contains objects. each object represents a rep
 a rep then is an object that contains number of reps and the weight of the set.
+
+
+An exercise can be created now. creating an exercise will only fill the name and date fields and associate the created exercise with the user who created it.
+the progression field is left empty.
+It's filled by actively entered a dedicated view from which an entry is appended to the field.
+
+Thus the next step now is to create an endpoint which enables CRUD operations on the progression field. this requires an update to the progression schema. I think each entry should have an id of its own, which begs the question, should each entry be its own entity? or should I leave them as an array and relay on the order of insertion? pros and cons for each? I'll stay with the current model. whether it succeed or fails, it's a learning experience.
+
+The first endpoint will be creating an entry. 
