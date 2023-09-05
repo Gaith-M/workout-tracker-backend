@@ -22,7 +22,17 @@ router.put("/create", async (req, res) => {
   const { error } = entrySchema.validate(req.body);
   if (error) return res.status(400).json({ success: false, data: null, message: error });
 
-  res.json(id);
+  try{
+    
+    await Exercise.updateOne({ _id: id }, { $push: { progression: req.body } });
+    const exercise = await Exercise.findOne({_id: id}, 'progression');
+
+    res.json(exercise)
+
+  }catch(err){
+    console.log(err);
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;

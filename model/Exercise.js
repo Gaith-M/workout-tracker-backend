@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model, Types } = require("mongoose");
 
 const ExerciseSchema = new Schema({
   name: { type: String, required: true },
@@ -6,6 +6,7 @@ const ExerciseSchema = new Schema({
   date: { type: Date, default: Date.now },
   progression: [
     {
+      _id: { type: Types.ObjectId, default: new Types.ObjectId() },
       date: { type: Date, default: Date.now },
       sets: [
         {
