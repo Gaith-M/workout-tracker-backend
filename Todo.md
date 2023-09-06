@@ -63,3 +63,12 @@ It's filled by actively entered a dedicated view from which an entry is appended
 Thus the next step now is to create an endpoint which enables CRUD operations on the progression field. this requires an update to the progression schema. I think each entry should have an id of its own, which begs the question, should each entry be its own entity? or should I leave them as an array and relay on the order of insertion? pros and cons for each? I'll stay with the current model. whether it succeed or fails, it's a learning experience.
 
 The first endpoint will be creating an entry. 
+
+Current status:
+I've created endpoints which fetch all exercises created by a user, and an endpoint which adds entries to an exercise.
+now, I need to allow the user to:
+- update an exercise (title/name only) - done
+- delete an exercise - done
+- get a specific exercise - done
+
+I ALSO MUST create a unified interface for responses. (done)
